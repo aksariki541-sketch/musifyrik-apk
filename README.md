@@ -10,15 +10,27 @@ sama sekali** oleh pembuatan APK ini.
 
 | Versi | File | Ukuran | Catatan |
 |---|---|---|---|
-| **1.1** | [`MusifyRik-v1.1.apk`](./MusifyRik-v1.1.apk) | ±4,7 MB | ⭐ **Mendukung mode offline** |
-| 1.0 | [`MusifyRik-v1.0.apk`](./MusifyRik-v1.0.apk) | ±406 KB | versi awal (butuh internet selalu) |
+| **1.2** | [`MusifyRik-v1.2.apk`](./MusifyRik-v1.2.apk) | ±4,7 MB | ⭐ **Auto-update + mode offline** |
+| 1.1 | [`MusifyRik-v1.1.apk`](./MusifyRik-v1.1.apk) | ±4,7 MB | mode offline |
+| 1.0 | [`MusifyRik-v1.0.apk`](./MusifyRik-v1.0.apk) | ±406 KB | versi awal (selalu butuh internet) |
+
+**Cara termudah: pakai [Releases](../../releases/latest)** — selalu berisi versi terbaru.
 
 Klik file APK → tombol **Download** (ikon ⤓ di kanan atas) atau **Raw**.
-Versi 1.1 bisa dipasang **menimpa** 1.0 (kunci penandatangan sama), data tidak hilang.
+Semua versi memakai kunci penandatangan yang sama, jadi bisa dipasang saling
+**menimpa** tanpa kehilangan data.
+
+> **Penting:** baru versi 1.2 yang punya auto-update. Jadi sekali ini kamu masih
+> perlu memasang 1.2 secara manual. Setelah itu, versi 1.3 dan seterusnya bisa
+> dipasang langsung dari dalam aplikasi (lihat bagian **Auto-Update**).
 
 ### Verifikasi (opsional)
 
 ```
+MusifyRik-v1.2.apk
+SHA-256 : 14994dd85c9994a11b4cecf9f0db69ae2bcb08bfa895f3721203b7618861fdd3
+Versi   : 1.2 (versionCode 10200)
+
 MusifyRik-v1.1.apk
 SHA-256 : 351f24ab4892b1d797744156a44eadced17a6eb7a9a749b7c1f95a90f61c0137
 Versi   : 1.1 (versionCode 2)
@@ -40,13 +52,45 @@ sha256sum MusifyRik-v1.1.apk
 
 ## Cara Install
 
-1. Unduh `MusifyRik-v1.1.apk` ke HP.
-2. Buka **File Manager → Download → MusifyRik-v1.1.apk**.
+1. Unduh `MusifyRik-v1.2.apk` ke HP.
+2. Buka **File Manager → Download → MusifyRik-v1.2.apk**.
 3. Jika muncul peringatan, izinkan **"Install unknown apps"** untuk File Manager /
    browser yang dipakai.
 4. Tap **Install** → **Open**.
 
-## Mode Offline (baru di 1.1)
+## Auto-Update (baru di 1.2)
+
+APK 1.2 memeriksa versi terbaru sendiri lewat GitHub Releases
+(`api.github.com/repos/aksariki541-sketch/musifyrik-apk/releases/latest`),
+maksimal **sekali per 24 jam**, tanpa memperlambat pembukaan aplikasi.
+
+Alurnya:
+
+1. Ada versi baru → dialog *"Versi 1.3 tersedia"* muncul.
+2. Tap **Unduh & pasang** → APK diunduh langsung di dalam aplikasi
+   (DownloadManager, ada progres di notifikasi).
+3. Setelah selesai, Android menampilkan dialog **Update** → tap sekali → aplikasi
+   diperbarui, data & koleksi tetap utuh.
+
+Sekali saja, Android akan meminta izin **"Install unknown apps"** untuk MusifyRik —
+aplikasi otomatis membuka halaman setelan yang tepat.
+
+**Yang tidak bisa dilakukan:** memasang tanpa ketukan sama sekali. Android 8+
+melarang pemasangan senyap oleh aplikasi biasa (hanya Play Store / app system /
+device owner yang boleh). Jadi ini batas OS, bukan batas aplikasi.
+
+Menerbitkan versi baru (untuk pemilik repo):
+
+```bash
+# 1. build dengan versionCode & versionName baru di build.sh
+# 2. buat release + unggah APK-nya
+gh release create v1.3 ../MusifyRik-v1.3.apk --title "MusifyRik 1.3" --notes "..."
+```
+
+Selama repo ini public dan asset release-nya berekstensi `.apk`, semua pengguna
+1.2 akan mendapat tawaran pembaruan otomatis.
+
+## Mode Offline (1.1)
 
 Seluruh "shell" aplikasi (HTML, JS, CSS, ikon, font — 41 berkas) dibundel ke dalam
 APK, lalu **hanya dipakai kalau perangkat tidak punya internet**.
@@ -107,6 +151,16 @@ Aplikasi ini adalah *WebView wrapper* yang memuat situs resmi
   kunci yang sama agar bisa dipasang sebagai pembaruan (bukan aplikasi baru).
 
 ## Riwayat Versi
+
+### 1.2 — Auto-update
+- Pemeriksa pembaruan harian ke GitHub Releases (tanpa login, tanpa Play Store).
+- Unduh APK baru di dalam aplikasi, lanjut ke dialog pemasangan Android.
+- Permintaan izin "Install unknown apps" dengan tautan langsung ke setelan.
+- `ApkProvider` (pengganti FileProvider, tanpa AndroidX) untuk menyerahkan APK
+  ke paket installer.
+- Mode offline 1.1 tetap ada.
+- versionCode pindah ke skema `major*10000 + minor*100 + patch` agar sinkron
+  dengan tag rilis (`v1.2` → 10200).
 
 ### 1.1 — Mode offline
 - Shell aplikasi (41 berkas) dibundel ke APK: aplikasi tetap terbuka walau HP
