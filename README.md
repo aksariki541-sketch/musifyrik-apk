@@ -10,7 +10,8 @@ sama sekali** oleh pembuatan APK ini.
 
 | Versi | File | Ukuran | Catatan |
 |---|---|---|---|
-| **1.2** | [`MusifyRik-v1.2.apk`](./MusifyRik-v1.2.apk) | ±4,7 MB | ⭐ **Auto-update + mode offline** |
+| **1.3** | [`MusifyRik-v1.3.apk`](./MusifyRik-v1.3.apk) | ±4,7 MB | ⭐ **Notifikasi pemutar musik** |
+| 1.2 | [`MusifyRik-v1.2.apk`](./MusifyRik-v1.2.apk) | ±4,7 MB | auto-update + mode offline |
 | 1.1 | [`MusifyRik-v1.1.apk`](./MusifyRik-v1.1.apk) | ±4,7 MB | mode offline |
 | 1.0 | [`MusifyRik-v1.0.apk`](./MusifyRik-v1.0.apk) | ±406 KB | versi awal (selalu butuh internet) |
 
@@ -20,13 +21,21 @@ Klik file APK → tombol **Download** (ikon ⤓ di kanan atas) atau **Raw**.
 Semua versi memakai kunci penandatangan yang sama, jadi bisa dipasang saling
 **menimpa** tanpa kehilangan data.
 
-> **Penting:** baru versi 1.2 yang punya auto-update. Jadi sekali ini kamu masih
+> **Penting:** auto-update mulai ada di 1.2. Jadi kalau masih di 1.0/1.1, pasang
+> 1.3 sekali secara manual. Setelah itu pembaruan berikutnya ditawarkan sendiri
+> oleh aplikasi.
+>
+> **Penting (lama):** baru versi 1.2 yang punya auto-update. Jadi sekali ini kamu masih
 > perlu memasang 1.2 secara manual. Setelah itu, versi 1.3 dan seterusnya bisa
 > dipasang langsung dari dalam aplikasi (lihat bagian **Auto-Update**).
 
 ### Verifikasi (opsional)
 
 ```
+MusifyRik-v1.3.apk
+SHA-256 : 723dcd4e3a0db1d6750a25af595a8bd26d1626f831ab9ae4700e04e18d10d491
+Versi   : 1.3 (versionCode 10300)
+
 MusifyRik-v1.2.apk
 SHA-256 : 14994dd85c9994a11b4cecf9f0db69ae2bcb08bfa895f3721203b7618861fdd3
 Versi   : 1.2 (versionCode 10200)
@@ -52,13 +61,33 @@ sha256sum MusifyRik-v1.1.apk
 
 ## Cara Install
 
-1. Unduh `MusifyRik-v1.2.apk` ke HP.
-2. Buka **File Manager → Download → MusifyRik-v1.2.apk**.
+1. Unduh `MusifyRik-v1.3.apk` ke HP.
+2. Buka **File Manager → Download → MusifyRik-v1.3.apk**.
 3. Jika muncul peringatan, izinkan **"Install unknown apps"** untuk File Manager /
    browser yang dipakai.
 4. Tap **Install** → **Open**.
 
-## Auto-Update (baru di 1.2)
+## Notifikasi Pemutar Musik (baru di 1.3)
+
+WebView tidak menampilkan kontrol media seperti Chrome, jadi aplikasi membuatnya
+sendiri secara native (`MediaNotification.java`):
+
+- **Notifikasi di bagian atas layar** berisi judul lagu, nama artis, cover album,
+  dan tombol **Sebelumnya / Putar-Jeda / Berikutnya**.
+- Muncul otomatis begitu lagu diputar, ikut berubah saat ganti lagu, dan hilang
+  tombolnya saat dijeda.
+- Tampil juga di **layar kunci**, dan bisa dikendalikan dari **headset / Bluetooth**
+  karena memakai `MediaSession` (metadata + `PlaybackState`).
+- Mengetuk notifikasi membuka aplikasi.
+
+Cara kerjanya: skrip kecil disuntikkan ke halaman (`NATIVE_PLAYER_JS` di
+`MainActivity.java`). Skrip itu membaca state pemutar situs (`S.ct`, `AU`) tiap
+detik, dan hanya mengirim ke native bila judul/artis/cover/status berubah — jadi
+tidak ada spam. Tombol notifikasi memanggil fungsi pemutar situs yang sudah ada
+(`TP()` putar-jeda, `NX()` berikutnya, `PV()` sebelumnya). Tidak ada perubahan
+kode web, dan tetap berfungsi meski situs di-update.
+
+## Auto-Update (1.2)
 
 APK 1.2 memeriksa versi terbaru sendiri lewat GitHub Releases
 (`api.github.com/repos/aksariki541-sketch/musifyrik-apk/releases/latest`),
@@ -151,6 +180,13 @@ Aplikasi ini adalah *WebView wrapper* yang memuat situs resmi
   kunci yang sama agar bisa dipasang sebagai pembaruan (bukan aplikasi baru).
 
 ## Riwayat Versi
+
+### 1.3 — Notifikasi pemutar musik
+- Notifikasi MediaStyle native: judul, artis, cover, tombol prev/play-pause/next.
+- MediaSession: kontrol dari layar kunci, headset, Bluetooth, jam tangan.
+- Jembatan JS dua arah (`MusifyPlayer` / `MusifyNativePlayer`), tanpa mengubah web.
+- Ikon notifikasi sendiri (5 ikon × 5 densitas), kanal "Pemutar musik" prioritas rendah.
+- Cover diambil dari URL lagu dan di-cache agar tidak diunduh berulang.
 
 ### 1.2 — Auto-update
 - Pemeriksa pembaruan harian ke GitHub Releases (tanpa login, tanpa Play Store).
