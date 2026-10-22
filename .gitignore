@@ -1,0 +1,4 @@
+# Kunci penandatangan rilis — JANGAN di-commit
+*.keystore
+*.jks
+*.idsig
